@@ -1,67 +1,65 @@
-var startBtn = document.querySelector(".btn btn-primary");
-var timer = document.querySelector(".timer");
-var secondsRemaining 
-var questions = document.querySelector("#questions");
-var choices = document.querySelector("#choices");
-var container = document.querySelector("#container");
-var viewHighScore = document.querySelector(".nav-link active scores");
-var submitBtn = document.querySelector("#submitInitials")
-var submitInt = document.querySelector("#nickname")
+// var startBtn = document.querySelector(".btn btn-primary");
+// var timer = document.querySelector(".timer");
+// var secondsRemaining 
+// var questions = document.querySelector("#questions");
+// var choices = document.querySelector("#choices");
+// var gameContainer = document.querySelector("#container");
+// var viewHighScore = document.querySelector(".nav-link active scores");
+// var submitBtn = document.querySelector("#submitInitials")
+// var submitInt = document.querySelector("#nickname")
 
-var questions = [  {
+var questionsArr  = [  
+    {
     question: "How old is my puppy?",
     answers: ["10", "200", "I don't have a puppy"],
     correctAnswer: ["I don't have a puppy"],
-
+    },
+    {
     question: "What color is my cat?",
     answers: ["brown", "blue", "black & white"],
     correctAnswer: ["black & white"],
+    },
 
+    {
     question: "who is the best NBA team?",
     answers: ["Warriors", "Clippers", "Lakers"],
     correctAnswer: ["Clippers"],
+    },
 
+    {
     question: "What color is a banana?",
     answers: ["red", "blue", "yellow"],
     correctAnswer: ["yellow"],
-
-}
+    },
 
     ]
-var secondsDown = 0;
 
+var startBtn = document.querySelector("#startBtn")
+var gameContainer = document.querySelector("#container")
 
-startBtn.addEventListener("click", function(){
-    container.innerHTML= ""
-    renderQuestions()
+var counter = 0
+var score = 0
+var timer = 100
+
+startBtn.addEventListener("click", function() {
+    var timeOnScreen =document.querySelector("h2")
+    timerOnScreen.textContent = timer
+    document.querySelector("time").appendChild(timerOnScreen)
+
+   renderQuestions() 
+   gameTimer()
 })
 
-function startTimer(){ 
-    var timeIntervalUp = setInterval(function(){
-        secondsDown--;
-        document.getElementById("clock").innerHTML = "Time Remaining: " + secondsDown;
-        if (secondsDown == 0) {
-            clearInterval(timeIntervalUp);
-            endTimer = 0;
-            reload();
-        }
-     }, 1000);
-
-   
-function endTimer() {   
-   document.getElementById("timer").innerHTML = "Time ran out";
-}
-
-
 function renderQuestions(){
+    gameContainer.innerHTML= ""
     var currentQuestions = questionArr[counter]
 
     var newQuestionH1 = document.createElement("h1")
     newQuestionH1.textContent= currentQuestions.q
-    container.appendChild(ulEl)
+    gameContainer.appendChild(ulEl)
 
     var ulEl = document.createElement("ul")
-    container.appendChild(ulEl)
+    gameContainer.appendChild(ulEl)
 
 for (var i = 0; i < currentQuestions.a.length; i++) {
     var newAnswer = document.createElement("button")
@@ -83,13 +81,80 @@ function answeringQuestion(event){
     console.log(valueOfButton)
 
     if(valueOfButton == currentQuestions.correctAnswer){
-        console.log("you're right")
+        console.log("you are correct")
         score ++
     } else {
         timer = timer -20
-        console.log("you're wrong")
+        console.log("you are wrong")
+        
+    }
+    counter++
+
+    if(counter >= questionArr.length){
+        endgame()
+    } else {
+        renderQuestions()
+    }
+}
+
+function endgame(text) {
+    gameContainer.innerHTML = ""
+    var scoreEl = document.createElement("h3")
+    var form =document.createElement("form")
+    var inputName = document.createElement("input")
+    var submitBtn = document.createElement("button")
+
+    inputName.setAttribute("finalScore", "Save your Highscore")
+    submitBtn.textContent = "Save"
+    submitBtn.addEventListener("click", saveHigh)
+
+    scoreEl.textContent = "Your score is : " + scoreEl
+    gameContainer.appendChild(scoreEl)
+
+    form.appendChild(inputName)
+    form.appendChild(submitBtn)
+    gameContainer.appendChild(form)
+
+    counter = 0
+    score = 0
+    timer = 100
+    
+}
+
+function gameTimer (){
+    var gameT = setInterval(function() {
+    timer--
+
+    if(timer == 0 || conter.questionArr.length) {
+        clearInterval(gameT)
+        endgame()
+    }
+}, 1000);
+}
+
+function saveHighScore(e){
+    event.preventDefault()
+
+    var currentScores = localStorage.getItem("scores")
+
+    if(currentScores !== null){
+        currentScores =JSON.parse(currentScores)
+
+        gameResult = {player: playerName, score: playerScore};
+        currentScores.push(gameResult);
+        currentScores.sort(function(a,b) { return (b.score - a.score) });
+
+        console.log(currentScores)
+    } else {
+        currentScores = []
+        currentScores.push({player:playerName, score:100})
+
     }
 
+    var highScores = {
 
-    secondsDown++
-    renderQuestions()
+    }
+    localStorage.setItem("scores", JSON.stringify(currentScores))
+}
+}
+
