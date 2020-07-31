@@ -1,12 +1,12 @@
-var startBtn = document.querySelector(".btn btn-primary");
-var timer = document.querySelector(".timer");
-// var secondsRemaining 
-// var questions = document.querySelector("#questions");
-// var choices = document.querySelector("#choices");
-var gameContainer = document.querySelector("#container");
-// var viewHighScore = document.querySelector(".nav-link active scores");
-var submitBtn = document.querySelector("#submitInitials")
-// var submitInt = document.querySelector("#nickname")
+// var startBtn = document.querySelector(".btn btn-primary");
+// var timer = document.querySelector(".timer");
+// // var secondsRemaining 
+// // var questions = document.querySelector("#questions");
+// // var choices = document.querySelector("#choices");
+// var gameContainer = document.querySelector("#container");
+// // var viewHighScore = document.querySelector(".nav-link active scores");
+// var submitBtn = document.querySelector("#submitInitials")
+// // var submitInt = document.querySelector("#nickname")
 
 var questionArr  = [  
     {
@@ -32,7 +32,7 @@ var questionArr  = [
     correctAnswer: "yellow"
     },
 
-    ]
+    ];
 
 var startBtn = document.querySelector("#startBtn")
 var gameContainer = document.querySelector("#container")
@@ -40,15 +40,16 @@ var gameContainer = document.querySelector("#container")
 var counter = 0
 var score = 0
 var timer = 100
+var stopTimer = false
 
 startBtn.addEventListener("click", function() {
-    var timerOnScreen =document.querySelector("h2")
+    var timerOnScreen = document.querySelector("timer")
     timerOnScreen.textContent = timer
-    document.querySelector(".timer").appendChild(timerOnScreen)
+    document.querySelector(".time").appendChild(timerOnScreen)
 
    renderQuestions() 
    gameTimer()
-})
+});
 
 function renderQuestions(){
     gameContainer.innerHTML= ""
@@ -56,7 +57,7 @@ function renderQuestions(){
 
     var newQuestionH1 = document.createElement("container")
     newQuestionH1.textContent= currentQuestions.q
-    gameContainer.appendChild(ulEl)
+    gameContainer.appendChild(newQuestionH1)
 
     var ulEl = document.createElement("ul")
     gameContainer.appendChild(ulEl)
@@ -65,7 +66,7 @@ for (var i = 0; i < currentQuestions.a.length; i++) {
     var newAnswer = document.createElement("button")
     var spacer = document.createElement("br")
     newAnswer.setAttribute("class", "btn btn-primary") 
-    newAnswer.setAttribute("nav-link active scores", currentQuestions.a[i])
+    newAnswer.setAttribute("data-answer", currentQuestions.a[i])
     newAnswer.textContent = currentQuestions.a[i]
     newAnswer.addEventListener("click", answeringQuestion)
     ulEl.appendChild(newAnswer)
@@ -76,7 +77,7 @@ for (var i = 0; i < currentQuestions.a.length; i++) {
 function answeringQuestion(event){
     var currentQuestions = questionsArr[counter]
     var currentPressedButton = event.target
-    var valueOfButton =currentPressedButton.getAttribute
+    var valueOfButton =currentPressedButton.getAttribute("data-answer")
     ("nav-link active scores")
     console.log(valueOfButton)
 
@@ -109,7 +110,7 @@ function endgame(text) {
     submitBtn.textContent = "Save"
     submitBtn.addEventListener("click", saveHigh)
 
-    scoreEl.textContent = "Your score is : " + scoreEl
+    scoreEl.textContent = "Your score is : " + score
     gameContainer.appendChild(scoreEl)
 
     form.appendChild(inputName)
@@ -126,7 +127,11 @@ function gameTimer (){
     var gameT = setInterval(function() {
     timer--
 
-    if(timer == 0 || conter.questionArr.length) {
+    var timerOnScreen = document.querySelector("h2")
+    timerOnScreen.textContent = timer;
+
+    if(timer == 0 || conter >= questionArr.length || stopTimer) {
+        document.querySelector(".time").innerHTML = ""
         clearInterval(gameT)
         endgame()
     }
@@ -136,6 +141,7 @@ function gameTimer (){
 function saveHighScore(e){
     event.preventDefault()
 
+    var playerName = document.querySelector("input").value
     var currentScores = localStorage.getItem("scores")
 
     if(currentScores !== null){
@@ -143,7 +149,10 @@ function saveHighScore(e){
 
         gameResult = {player: playerName, score: playerScore};
         currentScores.push(gameResult);
-        currentScores.sort(function(a,b) { return (b.score - a.score) });
+        currentScores.sort(function(a,b) { 
+            return (b.score - a.score) });
+
+            localStorage.setItem("scores", JSON.stringify(currentScores))
 
         console.log(currentScores)
     } else {
@@ -169,7 +178,4 @@ function saveHighScore(e){
 }
 }
 
-var highScores = {
-
-}
 
