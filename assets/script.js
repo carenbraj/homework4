@@ -1,35 +1,35 @@
-// var startBtn = document.querySelector(".btn btn-primary");
-// var timer = document.querySelector(".timer");
+var startBtn = document.querySelector(".btn btn-primary");
+var timer = document.querySelector(".timer");
 // var secondsRemaining 
 // var questions = document.querySelector("#questions");
 // var choices = document.querySelector("#choices");
-// var gameContainer = document.querySelector("#container");
+var gameContainer = document.querySelector("#container");
 // var viewHighScore = document.querySelector(".nav-link active scores");
-// var submitBtn = document.querySelector("#submitInitials")
+var submitBtn = document.querySelector("#submitInitials")
 // var submitInt = document.querySelector("#nickname")
 
-var questionsArr  = [  
+var questionArr  = [  
     {
     question: "How old is my puppy?",
     answers: ["10", "200", "I don't have a puppy"],
-    correctAnswer: ["I don't have a puppy"],
+    correctAnswer: "I don't have a puppy"
     },
     {
     question: "What color is my cat?",
     answers: ["brown", "blue", "black & white"],
-    correctAnswer: ["black & white"],
+    correctAnswer: "black & white"
     },
 
     {
     question: "who is the best NBA team?",
     answers: ["Warriors", "Clippers", "Lakers"],
-    correctAnswer: ["Clippers"],
+    correctAnswer: "Clippers"
     },
 
     {
     question: "What color is a banana?",
     answers: ["red", "blue", "yellow"],
-    correctAnswer: ["yellow"],
+    correctAnswer: "yellow"
     },
 
     ]
@@ -42,9 +42,9 @@ var score = 0
 var timer = 100
 
 startBtn.addEventListener("click", function() {
-    var timeOnScreen =document.querySelector("h2")
+    var timerOnScreen =document.querySelector("h2")
     timerOnScreen.textContent = timer
-    document.querySelector("time").appendChild(timerOnScreen)
+    document.querySelector(".timer").appendChild(timerOnScreen)
 
    renderQuestions() 
    gameTimer()
@@ -54,7 +54,7 @@ function renderQuestions(){
     gameContainer.innerHTML= ""
     var currentQuestions = questionArr[counter]
 
-    var newQuestionH1 = document.createElement("h1")
+    var newQuestionH1 = document.createElement("container")
     newQuestionH1.textContent= currentQuestions.q
     gameContainer.appendChild(ulEl)
 
@@ -105,6 +105,7 @@ function endgame(text) {
     var submitBtn = document.createElement("button")
 
     inputName.setAttribute("finalScore", "Save your Highscore")
+    inputName.setAttribute("name", "playerName")
     submitBtn.textContent = "Save"
     submitBtn.addEventListener("click", saveHigh)
 
@@ -149,12 +150,26 @@ function saveHighScore(e){
         currentScores = []
         currentScores.push({player:playerName, score:100})
 
+        localStorage.setItem("scores", JSON.stringify(currentScores))
     }
 
-    var highScores = {
+    gameContainer.innerHTML=""
 
+    var listHs = document.createElement("ol")
+
+    for (let i = 0; i < currentScores.length; i++) {
+      var listEl = document.createElement("li")
+      listEl.textContent = currentScores[i].player + ":" + currentScores[i].score
+
+      listHs.appendChild(listEl)
+        
     }
-    localStorage.setItem("scores", JSON.stringify(currentScores))
+    
+    gameContainer.appendChild(listHs)
 }
+}
+
+var highScores = {
+
 }
 
